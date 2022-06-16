@@ -1,0 +1,42 @@
+version: '2'
+services:
+  app:
+    container_name: backend
+    image: swp
+    build: .
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres
+    environment:
+      - PORT=8081
+      - DATABASE_NAME=swp
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=1234
+      - DATABASE_PORT=5433
+      - DATABASE_HOST=postgres
+      - DATABASE_DIALECT=postgres
+    networks:
+      - postgres
+    volumes:
+    - /logs
+  postgres:
+    container_name: "swp_postgres"
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-1234}
+      PGDATA: /data/postgres
+    volumes:
+       - postgres:/data/postgres
+    ports:
+      - "5433:5431"
+    networks:
+      - postgres
+    restart: unless-stopped
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+    postgres:
