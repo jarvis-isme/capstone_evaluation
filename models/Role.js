@@ -6,7 +6,7 @@ const Role = sequelize.define(
   {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncremental: true },
     name: { type: DataTypes.STRING(20), allowNull: false },
-    code: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4 },
+    code: { type: DataTypes.STRING(20), unique: true, allowNull: false },
   },
   { tableName: "roles" }
 );

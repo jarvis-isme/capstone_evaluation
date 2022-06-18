@@ -1,7 +1,7 @@
 
 echo 'Start build backend server'
-docker stop kt2
 docker build -t swp/web-app .
+docker  rm -f kt2
 docker run --name kt2 -p 8081:8081 -d --add-host host.docker.internal:host-gateway  \
     -e PORT=8081 \
     -e DATABASE_NAME=swp \
