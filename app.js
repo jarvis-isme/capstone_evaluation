@@ -20,7 +20,13 @@ app.use(
     }),
   })
 );
-
+app.use(
+  morgan("combined", {
+    stream: fs.createWriteStream(path.join(__dirname, "logs", "error.log"), {
+      flags: "a",
+    }),
+  })
+);
 //config error log
 const logger = new winston.createLogger({
   level: "info",

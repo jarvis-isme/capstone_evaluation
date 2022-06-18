@@ -5,7 +5,7 @@ module.exports = {
     database: process.env.DATABASE_NAME,
     host: process.env.DATABASE_HOST,
     port: process.env.DATABASE_PORT,
-    dialect: process.env.DATABASE_DIALECT,
+    dialect: "postgres",
   },
   test: {
     username: process.env.DATABASE_USER,
@@ -13,7 +13,7 @@ module.exports = {
     database: process.env.DATABASE_NAME,
     host: process.env.DATABASE_HOST,
     port: process.env.DATABASE_PORT,
-    dialect: process.env.DATABASE_DIALECT,
+    dialect: "postgres",
   },
   production: {
     username: process.env.DATABASE_USER,
@@ -32,13 +32,17 @@ const CapstoneTeam = require("../models/CapstoneTeam");
 const CapstoneCouncil = require("../models/CapstoneCouncil");
 const UserRole = require("../models/UserRole");
 // sync model
+Campus.hasMany(User);
+CapstoneTeam.hasMany(UserRole);
+UserRole.belongsTo(CapstoneTeam);
+CapstoneCouncil.hasMany(UserRole);
+UserRole.belongsTo(CapstoneCouncil);
+Role.hasMany(UserRole);
+UserRole.belongsTo(Role);
+
 Role.sync();
 Campus.sync();
 User.sync();
 CapstoneCouncil.sync();
 CapstoneTeam.sync();
 UserRole.sync();
-Campus.hasMany(User);
-CapstoneTeam.hasMany(UserRole);
-CapstoneCouncil.hasMany(UserRole);
-Role.hasMany(UserRole);

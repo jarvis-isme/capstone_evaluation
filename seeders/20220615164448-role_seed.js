@@ -1,36 +1,10 @@
 "use strict";
-const roles = [
-  {
-    name: "Teacher",
-    code: "TE",
-  },
-  {
-    name: "Admin",
-    code: "AD",
-  },
-  {
-    name: "Student",
-    code: "ST",
-  },
-  {
-    name: "Supervisor",
-    code: "SU",
-  },
-  {
-    name: "Secrectary",
-    code: "SE",
-  },
-  {
-    name: "Member Council",
-    code: "MECO",
-  },
-  {
-    name: "Member Capstone",
-    code: "MECA",
-  },
-];
+
+const roles = require("../datas/roles.json");
 module.exports = {
-  async up(queryInterface, Sequelize) {},
+  async up(queryInterface, Sequelize) {
+    return queryInterface.bulkInsert("roles", roles, {});
+  },
 
   async down(queryInterface, Sequelize) {
     /**
