@@ -10,6 +10,11 @@ const Room = sequelize.define(
       primaryKey: true,
       autoIncrement: true
     },
+    code: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+      unique: true
+    },
     name: {
       type: DataTypes.STRING(50),
       allowNull: false

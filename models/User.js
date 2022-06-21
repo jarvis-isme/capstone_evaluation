@@ -9,48 +9,49 @@ const User = sequelize.define(
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: true
     },
     name: {
       type: DataTypes.STRING(50),
-      allowNull: false,
+      allowNull: false
     },
     code: {
       type: DataTypes.STRING(20),
       unique: true,
-      allowNull: false,
+      allowNull: false
     },
     gender: {
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.BOOLEAN
     },
     email: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      unique: true,
+      unique: true
     },
     birthday: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATE
     },
     avatar: {
-      type: DataTypes.STRING(200),
+      type: DataTypes.STRING(200)
     },
     phone: {
-      type: DataTypes.STRING(20),
+      type: DataTypes.STRING(20)
     },
     status: {
       type: DataTypes.BOOLEAN,
-      defaultValue: true,
+      defaultValue: true
     },
     campus_id: {
+      field: "campus_id",
       type: DataTypes.INTEGER,
       references: {
         model: Campus,
-        key: "id",
-      },
-    },
+        key: "id"
+      }
+    }
   },
   {
-    tableName: "users",
+    tableName: "users"
   }
 );
 

@@ -36,7 +36,7 @@ const Room = require("../models/Room");
 const CouncilLocation = require("../models/CouncilLocation");
 const Semeter = require("../models/Semeter");
 const Topic = require("../models/Topic");
-
+const Report = require("../models/Report");
 // sync model
 // Campus.hasMany(User);
 // CapstoneTeam.hasMany(UserRole);
@@ -55,4 +55,5 @@ Topic.sync();
 CapstoneCouncil.sync();
 CapstoneTeam.sync();
 UserRole.sync();
+Report.sync();
 CouncilLocation.sync();
