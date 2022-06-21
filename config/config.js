@@ -32,17 +32,18 @@ const CapstoneTeam = require("../models/CapstoneTeam");
 const CapstoneCouncil = require("../models/CapstoneCouncil");
 const UserRole = require("../models/UserRole");
 // sync model
-Campus.hasMany(User);
-CapstoneTeam.hasMany(UserRole);
-UserRole.belongsTo(CapstoneTeam);
-CapstoneCouncil.hasMany(UserRole);
-UserRole.belongsTo(CapstoneCouncil);
-Role.hasMany(UserRole);
-UserRole.belongsTo(Role);
-
 Role.sync();
 Campus.sync();
 User.sync();
 CapstoneCouncil.sync();
-CapstoneTeam.sync();
 UserRole.sync();
+
+// Campus.hasMany(User);
+// CapstoneTeam.hasMany(UserRole);
+// UserRole.belongsTo(CapstoneTeam);
+// CapstoneCouncil.hasMany(UserRole);
+// UserRole.belongsTo(CapstoneCouncil);
+// Role.hasMany(UserRole);
+// UserRole.belongsTo(Role);
+// Semeter.hasMany(CapstoneTeam);
+// Topic.belongsTo(CapstoneTeam);

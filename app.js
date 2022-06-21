@@ -53,7 +53,8 @@ const campusRouter = require("./src/routes/campus");
 app.use("/campus", campusRouter);
 const userRouter = require("./src/routes/user");
 app.use("/user", userRouter);
-
+const capstoneTeamRouter = require("./src/routes/capstone_team");
+app.use("/capstone-team", capstoneTeamRouter);
 app.listen(port, () => {
   console.log(`Sever is listening on port ${port}`);
 });

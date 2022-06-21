@@ -3,7 +3,7 @@
 const roles = require("../datas/roles.json");
 module.exports = {
   async up(queryInterface, Sequelize) {
-    return queryInterface.bulkInsert("roles", roles, {});
+    return queryInterface.bulkInsert("roles", roles);
   },
 
   async down(queryInterface, Sequelize) {

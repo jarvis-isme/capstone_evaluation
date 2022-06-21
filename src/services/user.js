@@ -11,30 +11,38 @@ const login = async (idCampus, idToken) => {
   let response = null;
   //verify token firebase
   const decodedToken = await verifyToken(idToken);
+  if (!decodedToken) return response;
 
   //check user exist
   const user = await User.findOne({
     where: { email: decodedToken.email, campus_id: idCampus },
     attributes: { exclude: ["createdAt", "updatedAt"] },
   });
+
   if (user) {
     const payload = {
       email: user.email,
     };
-    console.log(decodedToken);
     const accessToken = await generateAccessToken(payload);
-    const roles = await UserRole.findAll({
+    const roles = await UserRole.findOne({
       where: {
         user_id: user.id,
-        capstone_team_id: null,
-        capstone_council_id: null,
       },
       attributes: { exclude: ["createdAt", "updatedAt"] },
     });
     response = {
-      accessToken: accessToken,
-      user: user,
-      roles: roles,
+      AccessToken: accessToken,
+      User: {
+        Id: user.id,
+        Gender: user.gender,
+        Roles: [{ RoleId: roles.roleId }],
+        Phone: user.phone,
+        Birthday: user.birthday,
+        CampusId: user.campus_id,
+        Email: user.email,
+        Code: user.code,
+        Name: user.name,
+      },
     };
   }
   return response;
