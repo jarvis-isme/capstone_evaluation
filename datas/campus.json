@@ -1,0 +1,22 @@
+[
+    {
+      "id": 1,
+      "code": "FPTU HN",
+      "name": "FPT University Ha Noi"
+    },
+    {
+      "id": 2,
+      "code": "FPTU HCM",
+      "name": "FPT University Ho Chi Minh"
+    },
+    {
+      "id": 3,
+      "code": "FPTU DN",
+      "name": "FPT University Da Nang"
+    },
+    {
+      "id": 4,
+      "code": "FPTU CT",
+      "name": "FPT University Can Tho"
+    }
+  ]

@@ -1,0 +1,65 @@
+[
+  {
+    "birthday": "2022-06-12T17:34:47.419852Z",
+    "campus_id": 2,
+    "code": "SE1409771",
+    "email": "khoandse140977@fpt.edu.vn",
+    "gender": false,
+    "name": "Nguyen Dang Khoa",
+    "phone": "0123123123"
+  },
+  {
+    "birthday": "2022-06-12T17:34:47.419852Z",
+    "campus_id": 2,
+    "code": "SE1409772",
+    "email": "duyttse140971@fpt.edu.vn",
+    "gender": false,
+    "name": "Than Thanh Duy",
+    "phone": "0123123123"
+  },
+  {
+    "birthday": "2022-06-12T17:34:47.419852Z",
+    "campus_id": 2,
+    "code": "SE1409773",
+    "email": "tinltse140972@fpt.edu.vn",
+    "gender": false,
+    "name": "Le Thanh Tin",
+    "phone": "0123123123"
+  },
+  {
+    "birthday": "2022-06-12T17:34:47.419852Z",
+    "campus_id": 2,
+    "code": "SE1409774",
+    "email": "vuhase141124@fpt.edu.vn",
+    "gender": false,
+    "name": "Huynh Anh Vu",
+    "phone": "0123123123"
+  },
+  {
+    "birthday": "2022-06-12T17:34:47.419852Z",
+    "campus_id": 2,
+    "code": "SE1409775",
+    "email": "longnvhse140908@fpt.edu.vn",
+    "gender": false,
+    "name": "Nguyeenx Vo Hoang Long",
+    "phone": "0123123123"
+  },
+  {
+    "birthday": "2022-06-12T17:34:47.419852Z",
+    "campus_id": 2,
+    "code": "SE1409776",
+    "email": "khoa.nguyendangse@gmail.com",
+    "gender": false,
+    "name": "Admin",
+    "phone": "01234"
+  },
+  {
+    "birthday": "2022-06-12T17:34:47.419852Z",
+    "campus_id": 2,
+    "code": "SE1409777",
+    "email": "nguyendangkhoa0302@gmail.com",
+    "gender": false,
+    "name": "Dang Khoa Lecture",
+    "phone": "0123123123"
+  }
+]

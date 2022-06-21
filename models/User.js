@@ -42,6 +42,7 @@ const User = sequelize.define(
       defaultValue: true,
     },
     campus_id: {
+      field: "campus_id",
       type: DataTypes.INTEGER,
       references: {
         model: Campus,

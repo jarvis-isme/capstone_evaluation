@@ -1,0 +1,26 @@
+[
+  {
+    "user_id": 1,
+    "role_id": 1,
+    "capstone_team_id": null,
+    "capstone_council_id": null
+  },
+  {
+    "user_id": 2,
+    "role_id": 1,
+    "capstone_team_id": null,
+    "capstone_council_id": null
+  },
+  {
+    "user_id": 3,
+    "role_id": 1,
+    "capstone_team_id": null,
+    "capstone_council_id": null
+  },
+  {
+    "user_id": 4,
+    "role_id": 1,
+    "capstone_team_id": null,
+    "capstone_council_id": null
+  }
+]
