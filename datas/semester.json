@@ -1,15 +1,18 @@
 [
   {
+    "code": "SP2022",
     "name": "Spring 2022",
     "start_at": "2022-01-01",
     "end_at": "2022-04-30"
   },
   {
+    "code": "SM2022",
     "name": "Summer 2022",
     "start_at": "2022",
     "end_at": "2022-08-30 "
   },
   {
+    "code": "FA2022",
     "name": "Fall 2022",
     "start_at": "2022-09-01",
     "end_at": "2022-12-31"
