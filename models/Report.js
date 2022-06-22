@@ -34,6 +34,11 @@ const Report = sequelize.define(
       allowNull: false,
       feild: "end_at"
     },
+    status: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
+    },
     submit_date: {
       type: DataTypes.DATE,
       allowNull: true,
