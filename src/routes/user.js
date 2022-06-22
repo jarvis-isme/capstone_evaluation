@@ -42,13 +42,13 @@ const CapstoneTeam = require("../../models/CapstoneTeam");
 const UserRole = require("../../models/UserRole");
 userRouter.post("/dummy-data", async (req, res) => {
   const campus = await Campus.bulkCreate(campuses, {
-    updateOnDuplicate: ["id"]
+    updateOnDuplicate: ["id"],
   });
   const role = await Role.bulkCreate(roles, {
-    updateOnDuplicate: ["id"]
+    updateOnDuplicate: ["id"],
   });
   const user = await User.bulkCreate(users, {
-    updateOnDuplicate: ["id"]
+    updateOnDuplicate: ["id"],
   });
 
   // const topic = await Topic.bulkCreate(topics, {
@@ -56,19 +56,12 @@ userRouter.post("/dummy-data", async (req, res) => {
   // });
 
   const semester = await Semeter.bulkCreate(semesters, {
-    updateOnDuplicate: ["code"]
+    updateOnDuplicate: ["code"],
   });
   // const capstoneTeaam = await CapstoneTeam.bulkCreate(capstoneTeams, {
   //   updateOnDuplicate: ["code"]
   // });
-  const userRole = await UserRole.bulkCreate(userRoles, {
-    updateOnDuplicate: [
-      "user_id",
-      "role_id",
-      "capstone_team_id",
-      "capstone_council_id"
-    ]
-  });
+
   res.send("OK");
 });
 module.exports = userRouter;
