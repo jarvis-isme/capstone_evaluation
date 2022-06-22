@@ -12,33 +12,33 @@ const UserRole = sequelize.define(
       type: DataTypes.INTEGER,
       references: {
         model: User,
-        key: "id",
-      },
+        key: "id"
+      }
     },
     capstoneTeamId: {
       field: "capstone_team_id",
       type: DataTypes.INTEGER,
       references: {
         model: CapstoneTeam,
-        key: "id",
-      },
+        key: "id"
+      }
     },
     councilTeamId: {
       field: "capstone_council_id",
       type: DataTypes.INTEGER,
       references: {
         model: CapstoneCouncil,
-        key: "id",
-      },
+        key: "id"
+      }
     },
     roleId: {
       field: "role_id",
       type: DataTypes.INTEGER,
       references: {
         model: Role,
-        key: "id",
-      },
-    },
+        key: "id"
+      }
+    }
   },
   {
     indexes: [
@@ -48,12 +48,12 @@ const UserRole = sequelize.define(
           "user_id",
           "role_id",
           "capstone_team_id",
-          "capstone_council_id",
-        ],
-      },
+          "capstone_council_id"
+        ]
+      }
     ],
-    tableName: "user_roles",
+    tableName: "user_roles"
   }
 );
-
+UserRole.removeAttribute("id");
 module.exports = UserRole;

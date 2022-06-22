@@ -128,3 +128,8 @@ dist
 .yarn/install-state.gz
 .pnp.*
 .vscode
+
+# history local
+.history/
+.DS_Store
+yarn.lock

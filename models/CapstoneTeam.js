@@ -8,8 +8,9 @@ const CapstoneTeam = sequelize.define(
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     code: { type: DataTypes.STRING(20), unique: true, allowNull: false },
     name: { type: DataTypes.STRING(50), allowNull: true },
-    status: { type: DataTypes.BOOLEAN, allowNull: false },
+    status: { type: DataTypes.STRING(1), allowNull: false },
     semeter_id: {
+      field: "semeter_id",
       type: DataTypes.INTEGER,
       references: {
         model: Semeter,
@@ -17,6 +18,7 @@ const CapstoneTeam = sequelize.define(
       }
     },
     topic_id: {
+      field: "topic_id",
       type: DataTypes.INTEGER,
       references: {
         model: Topic,

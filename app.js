@@ -16,15 +16,15 @@ const port = process.env.PORT || 8081;
 app.use(
   morgan("common", {
     stream: fs.createWriteStream(path.join(__dirname, "logs", "access.log"), {
-      flags: "a",
-    }),
+      flags: "a"
+    })
   })
 );
 app.use(
   morgan("combined", {
     stream: fs.createWriteStream(path.join(__dirname, "logs", "error.log"), {
-      flags: "a",
-    }),
+      flags: "a"
+    })
   })
 );
 //config error log
@@ -33,10 +33,10 @@ const logger = new winston.createLogger({
   transports: [
     new winston.transports.File({
       filename: "./logs/error.log",
-      level: "error",
-    }),
+      level: "error"
+    })
   ],
-  exitOnError: false,
+  exitOnError: false
 });
 app.use(function (err, req, res, next) {
   logger.error(
@@ -53,6 +53,9 @@ const campusRouter = require("./src/routes/campus");
 app.use("/campus", campusRouter);
 const userRouter = require("./src/routes/user");
 app.use("/user", userRouter);
+const adminRouter = require("./src/routes/admin");
+app.use("/admin", adminRouter);
+
 const capstoneTeamRouter = require("./src/routes/capstone_team");
 app.use("/capstone-team", capstoneTeamRouter);
 app.listen(port, () => {
