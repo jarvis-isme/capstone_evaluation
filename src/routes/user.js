@@ -61,7 +61,7 @@ userRouter.post("/dummy-data", async (req, res) => {
   // const capstoneTeaam = await CapstoneTeam.bulkCreate(capstoneTeams, {
   //   updateOnDuplicate: ["code"]
   // });
-
+  ``;
   res.send("OK");
 });
 module.exports = userRouter;
