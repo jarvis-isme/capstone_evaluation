@@ -6,7 +6,7 @@ module.exports = {
     database: process.env.DATABASE_NAME,
     host: process.env.DATABASE_HOST,
     port: process.env.DATABASE_PORT,
-    dialect: "postgres"
+    dialect: "postgres",
   },
   test: {
     username: process.env.DATABASE_USER,
@@ -14,7 +14,7 @@ module.exports = {
     database: process.env.DATABASE_NAME,
     host: process.env.DATABASE_HOST,
     port: process.env.DATABASE_PORT,
-    dialect: "postgres"
+    dialect: "postgres",
   },
   production: {
     username: process.env.DATABASE_USER,
@@ -22,8 +22,8 @@ module.exports = {
     database: process.env.DATABASE_NAME,
     host: process.env.DATABASE_HOST,
     port: process.env.DATABASE_PORT,
-    dialect: process.env.DATABASE_DIALECT
-  }
+    dialect: process.env.DATABASE_DIALECT,
+  },
 };
 
 const Campus = require("../models/Campus");
@@ -37,6 +37,7 @@ const CouncilLocation = require("../models/CouncilLocation");
 const Semeter = require("../models/Semeter");
 const Topic = require("../models/Topic");
 const Report = require("../models/Report");
+const File = require("../models/File");
 // sync model
 // Campus.hasMany(User);
 // CapstoneTeam.hasMany(UserRole);
@@ -46,18 +47,18 @@ const Report = require("../models/Report");
 // Role.hasMany(UserRole);
 // UserRole.belongsTo(Role);
 
-Role.sync();
-Campus.sync();
-User.sync();
-Room.sync();
-Semeter.sync();
-Topic.sync();
-CapstoneCouncil.sync();
-CapstoneTeam.sync();
-UserRole.sync();
-Report.sync();
-CouncilLocation.sync();
-
+Role.sync({ alter: true });
+Campus.sync({ alter: true });
+User.sync({ alter: true });
+Room.sync({ alter: true });
+Semeter.sync({ alter: true });
+Topic.sync({ alter: true });
+CapstoneCouncil.sync({ alter: true });
+CapstoneTeam.sync({ alter: true });
+UserRole.sync({ alter: true });
+Report.sync({ alter: true });
+CouncilLocation.sync({ alter: true });
+File.sync({ alter: true });
 // Campus.hasMany(User);
 // CapstoneTeam.hasMany(UserRole);
 // UserRole.belongsTo(CapstoneTeam);
