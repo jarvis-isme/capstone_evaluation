@@ -59,6 +59,8 @@ const semesterRouter = require("./src/routes/semester");
 app.use("/semester", semesterRouter);
 const capstoneTeamRouter = require("./src/routes/capstone_team");
 app.use("/capstone-team", capstoneTeamRouter);
+const reportRouter = require("./src/routes/report");
+app.use("/report", reportRouter);
 app.listen(port, () => {
   console.log(`Sever is listening on port ${port}`);
 });
