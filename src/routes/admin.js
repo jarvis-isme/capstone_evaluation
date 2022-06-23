@@ -81,9 +81,12 @@ adminRouter.post("/insert-capstone-team", async (req, res) => {
             userId: await User.findOne({
               where: { code: row.code_leader_name_1 }
             }).then(user => user.id),
-            capstoneTeamId: await CapstoneTeam.findOne({
-              where: { code: row.capstone_team_code }
-            }).then(capstoneTeam => capstoneTeam.id),
+            capstoneTeamId:
+              ROLES.LEADER === roleLeader
+                ? await CapstoneTeam.findOne({
+                    where: { code: row.capstone_team_code }
+                  }).then(capstoneTeam => capstoneTeam.id)
+                : null,
             councilTeamId: null,
             roleId: roleLeader
           };
@@ -97,9 +100,12 @@ adminRouter.post("/insert-capstone-team", async (req, res) => {
               userId: await User.findOne({
                 where: { code: row[`code_member_name_${i + 1}`] }
               }).then(user => user.id),
-              capstoneTeamId: await CapstoneTeam.findOne({
-                where: { code: row.capstone_team_code }
-              }).then(capstoneTeam => capstoneTeam.id),
+              capstoneTeamId:
+                ROLES.MEMBER === roleMember
+                  ? await CapstoneTeam.findOne({
+                      where: { code: row.capstone_team_code }
+                    }).then(capstoneTeam => capstoneTeam.id)
+                  : null,
               councilTeamId: null,
               roleId: roleMember
             };
@@ -114,9 +120,12 @@ adminRouter.post("/insert-capstone-team", async (req, res) => {
               userId: await User.findOne({
                 where: { code: row[`code_mentor_name_${i + 1}`] }
               }).then(user => user.id),
-              capstoneTeamId: await CapstoneTeam.findOne({
-                where: { code: row.capstone_team_code }
-              }).then(capstoneTeam => capstoneTeam.id),
+              capstoneTeamId:
+                ROLES.MENTOR === roleMentor
+                  ? await CapstoneTeam.findOne({
+                      where: { code: row.capstone_team_code }
+                    }).then(capstoneTeam => capstoneTeam.id)
+                  : null,
               councilTeamId: null,
               roleId: roleMentor
             };
@@ -327,9 +336,12 @@ adminRouter.post("/insert-capstone-council", async (req, res) => {
               where: { code: data[i].council.chairman.split("-")[0] }
             }).then(user => user.id),
             capstoneTeamId: null,
-            councilTeamId: await CapstoneCouncil.findOne({
-              where: { code: data[i].council.capstone_council_code }
-            }).then(council => council.id),
+            councilTeamId:
+              ROLES.CHAIRMAN === roleChairman
+                ? await CapstoneCouncil.findOne({
+                    where: { code: data[i].council.capstone_council_code }
+                  }).then(council => council.id)
+                : null,
             roleId: roleChairman
           };
           await upsertUserRole(chairmanItem, t4);
@@ -343,9 +355,12 @@ adminRouter.post("/insert-capstone-council", async (req, res) => {
               where: { code: data[i].council.secretary.split("-")[0] }
             }).then(user => user.id),
             capstoneTeamId: null,
-            councilTeamId: await CapstoneCouncil.findOne({
-              where: { code: data[i].council.capstone_council_code }
-            }).then(council => council.id),
+            councilTeamId:
+              ROLES.SECRETARY === roleSecretary
+                ? await CapstoneCouncil.findOne({
+                    where: { code: data[i].council.capstone_council_code }
+                  }).then(council => council.id)
+                : null,
             roleId: roleSecretary
           };
           await upsertUserRole(secretaryItem, t4);
@@ -361,9 +376,12 @@ adminRouter.post("/insert-capstone-council", async (req, res) => {
                 where: { code: memberArray[j].split("-")[0] }
               }).then(user => user.id),
               capstoneTeamId: null,
-              councilTeamId: await CapstoneCouncil.findOne({
-                where: { code: data[i].council.capstone_council_code }
-              }).then(council => council.id),
+              councilTeamId:
+                ROLES.MEMBERCOUNCIL === roleMember
+                  ? await CapstoneCouncil.findOne({
+                      where: { code: data[i].council.capstone_council_code }
+                    }).then(council => council.id)
+                  : null,
               roleId: roleMember
             };
             await upsertUserRole(memberItem, t4);
