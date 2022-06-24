@@ -38,6 +38,8 @@ const Semeter = require("../models/Semeter");
 const Topic = require("../models/Topic");
 const Report = require("../models/Report");
 const File = require("../models/File");
+const Setting = require("../models/Setting");
+const Grade = require("../models/Grade");
 // sync model
 // Campus.hasMany(User);
 // CapstoneTeam.hasMany(UserRole);
@@ -59,6 +61,8 @@ UserRole.sync({ alter: true });
 Report.sync({ alter: true });
 CouncilLocation.sync({ alter: true });
 File.sync({ alter: true });
+Setting.sync({ alter: true });
+Grade.sync({ alert: true });
 // Campus.hasMany(User);
 // CapstoneTeam.hasMany(UserRole);
 // UserRole.belongsTo(CapstoneTeam);

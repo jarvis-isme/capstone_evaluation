@@ -1,0 +1,7 @@
+[
+    {"id":1, "code":"M001","name":"Mark 1","value":0.3},
+    {"id":2, "code":"M001","name":"Mark 2","value":0.1},
+    {"id":3, "code":"M001","name":"Mark 3","value":0.4},
+    {"id":4, "code":"M001","name":"Mark 4","value":0.1},
+    {"id":5, "code":"M001","name":"Mark 5","value":0.1}
+]

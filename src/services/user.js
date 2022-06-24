@@ -5,6 +5,7 @@ const UserRole = require("../../models/UserRole");
 const verifyToken = require("../middlewares/verifyFirebase");
 const { generateAccessToken } = require("../middlewares/auth");
 const Role = require("../../models/Role");
+const { QueryTypes } = require("sequelize");
 
 //login
 const login = async (idCampus, idToken) => {
@@ -24,18 +25,29 @@ const login = async (idCampus, idToken) => {
       email: user.email,
     };
     const accessToken = await generateAccessToken(payload);
-    const roles = await UserRole.findOne({
+
+    const rawRoles = await UserRole.findAll({
       where: {
         user_id: user.id,
+        status: true,
       },
-      attributes: { exclude: ["createdAt", "updatedAt"] },
+    });
+    let roles = [];
+    rawRoles.forEach((role) => {
+      console.log(role);
+      roles.push({
+        UserId: role.userId ? role.userId : null,
+        RoleId: role.roleId ? role.roleId : null,
+        CapstoneTeamId: role.captoneTeamId ? role.captoneTeamId : null,
+        CasptoneCouncilId: role.councilTeamId,
+      });
     });
     response = {
       AccessToken: accessToken,
       User: {
         Id: user.id,
         Gender: user.gender,
-        Roles: [{ RoleId: roles.roleId }],
+        Roles: roles,
         Phone: user.phone,
         Birthday: user.birthday,
         CampusId: user.campus_id,
