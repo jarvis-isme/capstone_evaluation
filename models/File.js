@@ -8,7 +8,7 @@ const File = sequelize.define(
   {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: { type: DataTypes.STRING(50), allowNull: false },
-    path: { type: DataTypes.STRING(100), allowNull: false, unique: true },
+    path: { type: DataTypes.STRING(200), allowNull: false, unique: true },
     status: { type: DataTypes.BOOLEAN, defaultValue: true },
     type: { type: DataTypes.BOOLEAN, defaultValue: true },
     reportId: {

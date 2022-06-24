@@ -40,6 +40,8 @@ const capstoneTeams = require("../../datas/capstone_team.json");
 const userRoles = require("../../datas/user_roles.json");
 const CapstoneTeam = require("../../models/CapstoneTeam");
 const UserRole = require("../../models/UserRole");
+const settings = require("../../datas/settings.json");
+const Setting = require("../../models/Setting");
 userRouter.post("/dummy-data", async (req, res) => {
   const campus = await Campus.bulkCreate(campuses, {
     updateOnDuplicate: ["id"],
@@ -62,6 +64,9 @@ userRouter.post("/dummy-data", async (req, res) => {
   //   updateOnDuplicate: ["code"]
   // });
   const userRole = await UserRole.bulkCreate(userRoles, {});
+  const setting = await Setting.bulkCreate(settings, {
+    updateOnDuplicate: ["id"],
+  });
   res.send("OK");
 });
 module.exports = userRouter;

@@ -5,9 +5,9 @@ const Topic = sequelize.define(
   "Topic",
   {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    name: { type: DataTypes.STRING(500), allowNull: false },
+    name: { type: DataTypes.TEXT, allowNull: false },
     code: { type: DataTypes.STRING(30), allowNull: false, unique: true },
-    description: { type: DataTypes.STRING(500), allowNull: false }
+    description: { type: DataTypes.STRING(500), allowNull: false },
   },
   { tableName: "topics" }
 );
