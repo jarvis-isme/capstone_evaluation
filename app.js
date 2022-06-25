@@ -61,6 +61,8 @@ const capstoneTeamRouter = require("./src/routes/capstone_team");
 app.use("/capstone-team", capstoneTeamRouter);
 const reportRouter = require("./src/routes/report");
 app.use("/report", reportRouter);
+const gradeRouter = require("./src/routes/grade");
+app.use("/grade", gradeRouter);
 app.listen(port, () => {
   console.log(`Sever is listening on port ${port}`);
 });
