@@ -1,0 +1,56 @@
+{
+  "grades": [
+    {
+      "grade_by": 17,
+      "teacher_name": "Nguyễn Thị Cẩm Hương",
+      "marks": [
+        {
+          "id": 1,
+
+          "code": "M001",
+
+          "name": "Mark 3'",
+
+          "value": 0.4,
+          "mark": 9
+        },
+        {
+          "id": 2,
+
+          "code": "M002",
+
+          "name": "Mark 3'",
+
+          "value": 0.4,
+          "mark": 9
+        }
+      ]
+    },
+    {
+      "grade_by": 18,
+      "teacher_name": "Nguyễn Thị Cẩm Hươngs",
+      "marks": [
+        {
+          "id": 1,
+
+          "code": "M001",
+
+          "name": "Mark 3'",
+
+          "value": 0.4,
+          "mark": 9
+        },
+        {
+          "id": 2,
+
+          "code": "M002",
+
+          "name": "Mark 3'",
+
+          "value": 0.4,
+          "mark": 9
+        }
+      ]
+    }
+  ]
+}
