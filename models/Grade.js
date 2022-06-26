@@ -32,6 +32,11 @@ const Grade = sequelize.define(
       type: DataTypes.JSON,
       allowNull: false,
     },
+    totalGrade: {
+      field: "total_grade",
+      type: DataTypes.FLOAT,
+      default: 0,
+    },
   },
   {
     tableName: "grades",

@@ -39,6 +39,51 @@ const getFormSubmitGrade = async (report, user) => {
   return respone;
 };
 
+const submitGrade = async (report, details, user) => {
+  let response = {
+    code: 200,
+    message: "Submit Grade Successfully",
+    data: null,
+  };
+  details.forEach(async (detail) => {
+    const grade = await Grade.findOne({
+      where: {
+        reportId: report.id,
+        user_id: detail.id,
+      },
+    });
+    let totalGrade = 0;
+
+    let gradeDetails = grade.gradeDetail.grades;
+    gradeDetails?.forEach((gradeDetail) => {
+      if (gradeDetail.grade_by == user.id) {
+        gradeDetail.marks = detail.marks;
+        console.log(gradeDetail.marks[0]);
+      }
+      gradeDetail.marks.forEach((grade) => {
+        console.log(grade);
+        totalGrade += grade.value * grade.mark;
+      });
+    });
+    console.log(totalGrade / 5);
+    await grade.update(
+      {
+        totalGrade: totalGrade / 5,
+        gradeDetail: {
+          grades: gradeDetails,
+        },
+      },
+      {
+        where: {
+          id: grade.id,
+        },
+      }
+    );
+  });
+
+  return response;
+};
 module.exports = {
   getFormSubmitGrade,
+  submitGrade,
 };
