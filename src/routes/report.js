@@ -22,7 +22,7 @@ reportRouter.get("/:code", verifyToken, async (req, res) => {
   const role = UserRole.findOne({
     where: {
       user_id: user.id,
-      capstone_team_id: capstoneTeam.id,
+      capstone_team_id: capstoneTeam?.id,
     },
   });
 

@@ -5,6 +5,7 @@ const sequelize = require("../../db");
 const { QueryTypes } = require("sequelize");
 const CapstoneTeam = require("../../models/CapstoneTeam");
 const Topic = require("../../models/Topic");
+const Grade = require("../../models/Grade");
 
 // insert or update report
 const upsertReport = async (reportItem, trans) => {
@@ -18,7 +19,7 @@ const upsertReport = async (reportItem, trans) => {
 const getReportByCode = async (capstoneTeam) => {
   const reports = await Report.findAll({
     where: {
-      capstone_team_id: capstoneTeam.id,
+      capstone_team_id: capstoneTeam?.id,
     },
   });
   return reports ? reports : [];
@@ -58,9 +59,16 @@ const submitFile = async (code, type, path, name, user) => {
     reportId: report.id,
     userId: user.id,
   });
-  report.update({
-    submit_date: Date(),
-  });
+  report.update(
+    {
+      submit_date: Date(),
+    },
+    {
+      where: {
+        id: report.id,
+      },
+    }
+  );
   return response;
 };
 
@@ -88,11 +96,17 @@ const getDetailReport = async (report, user) => {
   const submition = await sequelize.query(rawQuery, {
     type: QueryTypes.SELECT,
   });
-
+  const grade = await Grade.findOne({
+    where: {
+      reportId: report.id,
+      userId: user.id,
+    },
+  });
   response = {
     topic: topic,
     report: report,
     submition: submition,
+    grades: grade,
   };
   return response;
 };
