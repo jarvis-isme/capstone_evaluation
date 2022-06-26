@@ -78,6 +78,7 @@ const getAllCapstoneTeam = async (user, semesterCode) => {
           description: item.topic_description ? item.topic_description : "",
           name: item.topic_name,
         },
+        role_id: item.role_id,
       });
     }
   });
@@ -139,6 +140,7 @@ const getAllCapstoneTeam = async (user, semesterCode) => {
           description: item.topic_description ? item.topic_description : "",
           name: item.topic_name,
         },
+        role_id: item.role_id,
       });
     }
   });
