@@ -4,6 +4,8 @@ const cors = require("cors");
 const helmet = require("helmet");
 const sequelize = require("./db");
 const winston = require("winston");
+var cron = require("node-cron");
+var nodemailer = require("nodemailer");
 
 require("dotenv").config();
 var fs = require("fs");
@@ -44,6 +46,7 @@ app.use(function (err, req, res, next) {
   );
   next(err);
 });
+
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(cors());
@@ -63,6 +66,18 @@ const reportRouter = require("./src/routes/report");
 app.use("/report", reportRouter);
 const gradeRouter = require("./src/routes/grade");
 app.use("/grade", gradeRouter);
+
+const transporter = nodemailer.createTransport({
+  host: "smtp.mailtrap.io",
+  port: 2525,
+  auth: {
+    user: `${process.env.USER_MAIL}`,
+    pass: `${process.env.PASS_MAIL}`,
+  },
+});
+// cron.schedule("0,0,9 * * *", async () => {
+
+// });
 app.listen(port, () => {
   console.log(`Sever is listening on port ${port}`);
 });

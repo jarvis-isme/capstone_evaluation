@@ -3,6 +3,7 @@ const Grade = require("../../models/Grade");
 const User = require("../../models/User");
 const sequelize = require("../../db");
 const { QueryTypes } = require("sequelize");
+const UserRole = require("../../models/UserRole");
 
 const getFormSubmitGrade = async (report, user) => {
   let respone = {};

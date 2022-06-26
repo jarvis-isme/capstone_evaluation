@@ -41,7 +41,7 @@ const UserRole = sequelize.define(
     },
     status: {
       type: DataTypes.BOOLEAN,
-      defaultValue: true,
+      defaultValue: false,
     },
   },
   {
