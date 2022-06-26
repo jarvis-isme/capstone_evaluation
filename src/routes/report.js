@@ -27,7 +27,7 @@ reportRouter.get("/:code", verifyToken, async (req, res) => {
   });
 
   if (!capstoneTeamCode || (capstoneTeamCode && (!capstoneTeam || !role))) {
-    res.json(validation());
+    res.status(400).json(validation());
   }
   try {
     const reports = await getReportByCode(capstoneTeam);
@@ -45,7 +45,7 @@ reportRouter.post("/submit", verifyToken, async (req, res) => {
   const { code, path, name, type } = req.body;
   console.log({ code, path, name, type });
   if (!code || !path || !name || !type) {
-    res.json(validation());
+    res.status(400).json(validation());
   }
   try {
     const response = await submitFile(code, type, path, name, user);
