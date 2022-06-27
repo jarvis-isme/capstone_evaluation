@@ -29,7 +29,9 @@ gradeRouter.post("/submit", verifyToken, async (req, res) => {
   const { code, details } = req.body;
   const user = req.user;
   const report = await Report.findOne({
-    code: code,
+    where: {
+      code: code
+    }
   });
   if (!report || !details) {
     res.status(400).json(validation());

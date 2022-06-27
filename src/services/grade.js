@@ -67,7 +67,7 @@ const submitGrade = async (report, details, user) => {
       });
     });
     console.log(totalGrade / 5);
-    await grade.update(
+    await Grade.update(
       {
         totalGrade: totalGrade / 5,
         gradeDetail: {
