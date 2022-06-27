@@ -1,6 +1,6 @@
 const express = require("express");
 const userRouter = express.Router();
-const { login } = require("../services/user");
+const { login, getProfileUser, updateAvatarUser } = require("../services/user");
 const { success, error, validation } = require("../middlewares/respone");
 const { verifyToken } = require("../middlewares/auth");
 const User = require("../../models/User");
@@ -46,13 +46,13 @@ const rooms = require("../../datas/rooms.json");
 const Room = require("../../models/Room");
 userRouter.post("/dummy-data", async (req, res) => {
   const campus = await Campus.bulkCreate(campuses, {
-    updateOnDuplicate: ["id"],
+    updateOnDuplicate: ["id"]
   });
   const role = await Role.bulkCreate(roles, {
-    updateOnDuplicate: ["id"],
+    updateOnDuplicate: ["id"]
   });
   const user = await User.bulkCreate(users, {
-    updateOnDuplicate: ["id"],
+    updateOnDuplicate: ["id"]
   });
 
   // const topic = await Topic.bulkCreate(topics, {
@@ -60,14 +60,14 @@ userRouter.post("/dummy-data", async (req, res) => {
   // });
 
   const semester = await Semeter.bulkCreate(semesters, {
-    updateOnDuplicate: ["code"],
+    updateOnDuplicate: ["code"]
   });
   // const capstoneTeaam = await CapstoneTeam.bulkCreate(capstoneTeams, {
   //   updateOnDuplicate: ["code"]
   // });
   const userRole = await UserRole.bulkCreate(userRoles, {});
   const setting = await Setting.bulkCreate(settings, {
-    updateOnDuplicate: ["id"],
+    updateOnDuplicate: ["id"]
   });
 
   const room = await Room.bulkCreate(rooms, {
@@ -75,4 +75,34 @@ userRouter.post("/dummy-data", async (req, res) => {
   });
   res.send("OK");
 });
+
+// get profile user
+userRouter.get("/profile", verifyToken, async (req, res) => {
+  const userCode = req.query.code;
+  try {
+    if (userCode) {
+      const user = await getProfileUser(userCode);
+      res.json(success((message = "Get Profile"), (results = user)));
+    } else {
+      throw "User code is required";
+    }
+  } catch (e) {
+    console.log(e);
+    res.status(500).send(error);
+  }
+});
+
+// update avatar
+userRouter.put("/profile", verifyToken, async (req, res) => {
+  const { avatar, code } = req.body;
+  console.log(avatar, code);
+  try {
+    await updateAvatarUser(avatar, code);
+    res.json(success((message = "Update Profile"), (results = null)));
+  } catch (e) {
+    console.log(e);
+    res.status(500).send(error);
+  }
+});
+
 module.exports = userRouter;
