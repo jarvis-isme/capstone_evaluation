@@ -11,7 +11,8 @@ docker run --name kt2 -p 8081:8081 -d --add-host host.docker.internal:host-gatew
     -e DATABASE_HOST=host.docker.internal \
     -e DATABASE_DIALECT=postgres \
     -e NODE_ENV=development \
-    -v swp391:/logs \
+    -v /Users/mac/Coding/logs:/logs \
+    -v /tmp:/opt/usrs/ \
     swp/web-app 
 
 echo 'Stop build backend server'

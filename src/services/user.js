@@ -17,29 +17,28 @@ const login = async (idCampus, idToken) => {
   //check user exist
   const user = await User.findOne({
     where: { email: decodedToken.email, campus_id: idCampus },
-    attributes: { exclude: ["createdAt", "updatedAt"] }
+    attributes: { exclude: ["createdAt", "updatedAt"] },
   });
 
   if (user) {
     const payload = {
-      email: user.email
+      email: user.email,
     };
     const accessToken = await generateAccessToken(payload);
 
     const rawRoles = await UserRole.findAll({
       where: {
         user_id: user.id,
-        status: true
-      }
+      },
     });
     let roles = [];
-    rawRoles.forEach(role => {
+    rawRoles.forEach((role) => {
       console.log(role);
       roles.push({
         UserId: role.userId ? role.userId : null,
         RoleId: role.roleId ? role.roleId : null,
         CapstoneTeamId: role.captoneTeamId ? role.captoneTeamId : null,
-        CasptoneCouncilId: role.councilTeamId
+        CasptoneCouncilId: role.councilTeamId,
       });
     });
     response = {
@@ -53,18 +52,18 @@ const login = async (idCampus, idToken) => {
         CampusId: user.campus_id,
         Email: user.email,
         Code: user.code,
-        Name: user.name
-      }
+        Name: user.name,
+      },
     };
   }
   return response;
 };
 
 // get profile user
-const getProfileUser = async code => {
+const getProfileUser = async (code) => {
   const user = await User.findOne({
     where: { code: code },
-    attributes: { exclude: ["createdAt", "updatedAt"] }
+    attributes: { exclude: ["createdAt", "updatedAt"] },
   });
   if (!user) return null;
   return user;
@@ -78,5 +77,5 @@ const updateAvatarUser = async (avatar, code) => {
 module.exports = {
   login,
   getProfileUser,
-  updateAvatarUser
+  updateAvatarUser,
 };

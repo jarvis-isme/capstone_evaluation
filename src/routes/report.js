@@ -44,7 +44,7 @@ reportRouter.post("/submit", verifyToken, async (req, res) => {
   const user = req.user;
   const { code, path, name, type } = req.body;
   console.log({ code, path, name, type });
-  if (!code || !path || !name || !type) {
+  if (!code || !path || !name || type === null) {
     res.status(400).json(validation());
   }
   try {

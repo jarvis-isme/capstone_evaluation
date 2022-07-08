@@ -67,6 +67,21 @@ const submitGrade = async (report, details, user) => {
       });
     });
     console.log(totalGrade / 5);
+
+    // update pass if > 5
+    if (totalGrade / 5 > 5) {
+      await UserRole.update(
+        {
+          status: true,
+        },
+        {
+          where: {
+            capstone_team_id: report.capstone_team_id,
+            user_id: detail.id,
+          },
+        }
+      );
+    }
     await Grade.update(
       {
         totalGrade: totalGrade / 5,

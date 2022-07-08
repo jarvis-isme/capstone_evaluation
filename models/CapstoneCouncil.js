@@ -8,14 +8,6 @@ const CapstoneCouncil = sequelize.define(
     code: { type: DataTypes.STRING(20), unique: true, allowNull: false },
     name: { type: DataTypes.STRING(50), allowNull: true },
     status: { type: DataTypes.BOOLEAN, allowNull: false },
-    semeter_id: {
-      field: "semeter_id",
-      type: DataTypes.INTEGER,
-      references: {
-        model: Semeter,
-        key: "id"
-      }
-    }
   },
   { tableName: "capstone_councils" }
 );
