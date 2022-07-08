@@ -63,22 +63,23 @@ const insertCouncils = async (councils) => {
         thirdMember,
       ];
 
-      codes.forEach(async (code, index) => {
+      for (j = 0; j < codes.length; j++) {
         const user = await User.findOne({
           where: {
-            code: code,
+            code: codes[j],
           },
         });
-        if (!user || !code) {
+        if (!user) {
           console.log("xxs");
           isValid = false;
         }
-      });
+      }
       if (isValid) {
         console.log("before");
         count++;
         console.log(count);
         console.log("after");
+        console.log(isValid);
         let council = await CapstoneCouncil.findOne({
           where: {
             code: councilCode,
