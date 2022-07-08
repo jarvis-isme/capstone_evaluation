@@ -1,6 +1,6 @@
 const express = require("express");
 const { verifyToken } = require("../middlewares/auth");
-const { getAllCapstoneTeam } = require("../services/capstone_team");
+const { getAllCapstoneTeam, getFiles } = require("../services/capstone_team");
 const capstoneTeamRouter = express.Router();
 const { success, error, validation } = require("../middlewares/respone");
 const Semeter = require("../../models/Semeter");
@@ -27,6 +27,22 @@ capstoneTeamRouter.get("/search", verifyToken, async (req, res) => {
     );
   } catch (e) {
     console.log(e);
+  }
+});
+
+capstoneTeamRouter.get("/files", verifyToken, async (req, res, next) => {
+  const user = req.user;
+  try {
+    const response = await getFiles(user);
+    res.json(
+      success(
+        (message = "Get document for capstone teams"),
+        (results = response)
+      )
+    );
+  } catch (e) {
+    console.log(e);
+    next(e);
   }
 });
 module.exports = capstoneTeamRouter;

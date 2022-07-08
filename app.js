@@ -67,6 +67,8 @@ app.use("/report", reportRouter);
 const gradeRouter = require("./src/routes/grade");
 app.use("/grade", gradeRouter);
 
+const { errorHandle } = require("./src/middlewares/errorHandler");
+app.use(errorHandle);
 const transporter = nodemailer.createTransport({
   host: "smtp.mailtrap.io",
   port: 2525,
