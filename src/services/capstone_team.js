@@ -160,7 +160,8 @@ const getFiles = async (user) => {
   R.date_grade,
   f.path,
   s.id as semester_id,
-  s.name as semester_name
+  s.name as semester_name,
+  f.name as file_name
   from semeters S
   join capstone_teams C on S.id = C.semeter_id
   join topics T on C.topic_id = T.id
@@ -196,6 +197,7 @@ const getFiles = async (user) => {
             topic_name: file.topic_name,
             path: file.path,
             date_grade: file.date_grade,
+            name: file.file_name,
           },
         ],
       });
@@ -205,6 +207,7 @@ const getFiles = async (user) => {
         topic_name: file.topic_name,
         path: file.path,
         date_grade: file.date_grade,
+        name: file.file_name,
       });
     }
   });

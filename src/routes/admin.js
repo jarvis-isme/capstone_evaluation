@@ -27,7 +27,12 @@ const { QueryTypes } = require("sequelize");
 const ROLES = require("../../constant/role");
 const moment = require("moment");
 const { verifyToken } = require("../middlewares/auth");
-const { insertCouncils } = require("../services/admin");
+const {
+  insertCouncils,
+  getAllCouncilTeams,
+  getAllCapstoneTeams,
+  getDetailCapstoneTeam,
+} = require("../services/admin");
 
 adminRouter.post("/insert-capstone-team", async (req, res) => {
   try {
@@ -149,45 +154,7 @@ adminRouter.post("/insert-capstone-team", async (req, res) => {
 
 adminRouter.get("/get-captone-team", async (req, res) => {
   try {
-    const result = await sequelize.query(
-      `SELECT 
-        ct.code as capstone_team_code,
-        s.name as semeter_name,
-        t.name as topic_name,
-        ct.status as capstone_team_status,
-        u.name as user_name,
-        u.code as user_code,ur.role_id 
-      FROM users u
-        inner join user_roles ur on u.id = ur.user_id
-        inner join capstone_teams ct on ct.id = ur.capstone_team_id
-        inner join semeters s on ct.semeter_id = s.id
-        inner join topics t on ct.topic_id = t.id;`,
-      { type: QueryTypes.SELECT }
-    );
-    let data = null;
-    for (let i = 0; i < result.length; i++) {
-      if (data === null) {
-        data = [];
-        data.push(handleObjTemp(result[i]));
-      } else {
-        if (
-          data.find(
-            (item) => item.capstone_team_code === result[i].capstone_team_code
-          ) === undefined
-        ) {
-          data.push(handleObjTemp(result[i]));
-        } else {
-          data = handleAddRole(data, result[i]);
-        }
-      }
-    }
-    // remove ", " from member_name and mentor_name
-    if (data) {
-      for (let i = 0; i < data.length; i++) {
-        data[i].member_name = data[i].member_name.slice(0, -2);
-        data[i].mentor_name = data[i].mentor_name.slice(0, -2);
-      }
-    }
+    const data = await getAllCapstoneTeams();
     res.json(
       success((message = "get capstone team successfully"), (results = data))
     );
@@ -197,91 +164,10 @@ adminRouter.get("/get-captone-team", async (req, res) => {
   }
 });
 
-const handleObjTemp = (row) => {
-  let obj = {
-    capstone_team_code: row.capstone_team_code,
-    semeter_name: row.semeter_name,
-    capstone_team_status: row.capstone_team_status,
-    topic_name: row.topic_name,
-    leader_name: "",
-    member_name: "",
-    mentor_name: "",
-  };
-  switch (row.role_id) {
-    case ROLES.LEADER:
-      obj.leader_name = row.user_name;
-      break;
-    case ROLES.MEMBER:
-      obj.member_name += row.user_name + ", ";
-      break;
-    case ROLES.MENTOR:
-      obj.mentor_name += row.user_name + ", ";
-      break;
-  }
-  return obj;
-};
-
-const handleAddRole = (data, row) => {
-  let index = data.findIndex(
-    (item) => item.capstone_team_code === row.capstone_team_code
-  );
-  switch (row.role_id) {
-    case ROLES.LEADER:
-      data[index].leader_name = row.user_name;
-      break;
-    case ROLES.MEMBER:
-      data[index].member_name += row.user_name + ", ";
-      break;
-    case ROLES.MENTOR:
-      data[index].mentor_name += row.user_name + ", ";
-      break;
-  }
-  return data;
-};
-
 // get capstone council
 adminRouter.get("/get-captone-council", async (req, res) => {
   try {
-    const result = await sequelize.query(
-      `SELECT
-      cc.id as id,
-      cc.code as capstone_council_code,
-      u.name as user_name,
-      ur.role_id as role_id
-      FROM users u
-      inner join user_roles ur on u.id = ur.user_id
-      inner join capstone_councils cc on cc.id = ur.capstone_council_id
-    order by
-    cc.id desc`,
-      { type: QueryTypes.SELECT }
-    );
-    let data = null;
-    for (let i = 0; i < result.length; i++) {
-      console.log(result[i]);
-      if (data === null) {
-        data = [];
-        data.push(handleObjTempCouncil(result[i]));
-      } else {
-        if (
-          data.find(
-            (item) =>
-              item.capstone_council_code === result[i].capstone_council_code
-          ) === undefined
-        ) {
-          data.push(handleObjTempCouncil(result[i]));
-        } else {
-          data = handleAddRoleCouncil(data, result[i]);
-        }
-      }
-      // console.log(data);
-    }
-    // remove ", " from member_name and mentor_name
-    if (data) {
-      for (let i = 0; i < data.length; i++) {
-        data[i].member = data[i].member.slice(0, -2);
-        data[i].index = i + 1;
-      }
-    }
+    const data = await getAllCouncilTeams();
     res.json(
       success((message = "get capstone council successfully"), (results = data))
     );
@@ -290,28 +176,6 @@ adminRouter.get("/get-captone-council", async (req, res) => {
     res.status(500).json(error());
   }
 });
-const handleObjTempCouncil = (row, index) => {
-  let obj = {
-    capstone_council_code: row.capstone_council_code,
-    semeter_name: row.semeter_name,
-    index: "",
-    chairman: "",
-    secretary: "",
-    member: "",
-  };
-  switch (row.role_id) {
-    case ROLES.CHAIRMAN:
-      obj.chairman = row.user_name;
-      break;
-    case ROLES.SECRETARY:
-      obj.secretary = row.user_name;
-      break;
-    case ROLES.MEMBERCOUNCIL:
-      obj.member += row.user_name + ", ";
-      break;
-  }
-  return obj;
-};
 
 // post insert
 adminRouter.post(
@@ -335,21 +199,29 @@ adminRouter.post(
   }
 );
 
-const handleAddRoleCouncil = (data, row) => {
-  let index = data.findIndex(
-    (item) => item.capstone_council_code === row.capstone_council_code
-  );
-  switch (row.role_id) {
-    case ROLES.CHAIRMAN:
-      data[index].chairman = row.user_name;
-      break;
-    case ROLES.SECRETARY:
-      data[index].secretary = row.user_name;
-      break;
-    case ROLES.MEMBERCOUNCIL:
-      data[index].member += row.user_name + ", ";
-      break;
+adminRouter.get("/capstone-team/:code", async (req, res, next) => {
+  const code = req.params.code;
+  const capstoneTeam = await CapstoneTeam.findOne({
+    where: {
+      code: code,
+    },
+  });
+  if (!code) {
+    res.status(400).json(validation());
   }
-  return data;
-};
+  try {
+    const response = await getDetailCapstoneTeam(capstoneTeam);
+
+    res.json(
+      success(
+        (message = "Get Detail Capstone Team Succesfully"),
+        (results = response)
+      )
+    );
+  } catch (e) {
+    console.log(e);
+    next((e.code = 500));
+  }
+});
+
 module.exports = adminRouter;

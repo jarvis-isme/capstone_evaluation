@@ -37,7 +37,7 @@ const login = async (idCampus, idToken) => {
       roles.push({
         UserId: role.userId ? role.userId : null,
         RoleId: role.roleId ? role.roleId : null,
-        CapstoneTeamId: role.captoneTeamId ? role.captoneTeamId : null,
+        CapstoneTeamId: role.captonseTeamId ? role.captonseTeamId : null,
         CasptoneCouncilId: role.councilTeamId,
       });
     });
