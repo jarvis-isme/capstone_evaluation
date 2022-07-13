@@ -672,6 +672,7 @@ const insertCapstoneTeams = async (teams) => {
       }
     }
   }
+  return { count: count };
 };
 const getDetailCapstoneCouncil = async (code) => {
   let result = null;
