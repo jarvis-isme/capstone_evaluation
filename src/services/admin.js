@@ -13,6 +13,8 @@ const Setting = require("../../models/Setting");
 const CouncilLocation = require("../../models/CouncilLocation");
 const sequelize = require("../../db");
 const { QueryTypes } = require("sequelize");
+const Semeter = require("../../models/Semeter");
+const Topic = require("../../models/Topic");
 
 // insert councils team
 const insertCouncils = async (councils) => {
@@ -574,8 +576,105 @@ const getDetailCapstoneTeam = async (capstoneTeam) => {
   };
   return detailCapstoneTeam;
 };
+const insertCapstoneTeams = async (teams) => {
+  let count = 0;
+  for (i = 0; i < teams?.length; i++) {
+    const item = teams[i];
+    const capstoneteamCode = item["capstone_team_code"];
+    const semesterCode = item["semeter_code"];
+    const topicCode = item["topic_code"];
+    const topicDescription = item["topic_description"];
+    const leaderCode = item["leader_code"];
+    const mentorCodes = item["mentor_code"].split(",");
+    let memberCodes = item["member_code"].split(",");
+    memberCodes.unshift(leaderCode);
+    const topicName = item["topic_name"];
+    let isValid = true;
+    const semester = await Semeter.findOne({
+      where: { code: semesterCode },
+    });
+    if (!capstoneteamCode || !topicCode || !topicName || !semester) {
+      isValid = false;
+    }
 
-const getDetailCapstoneCouncil = async code => {
+    const tests = memberCodes.concat(mentorCodes);
+    for (j = 0; j < tests.length; j++) {
+      const user = await User.findOne({
+        where: {
+          code: tests[j].trim(),
+        },
+      });
+      if (!user) {
+        isValid = false;
+      }
+    }
+    if (isValid) {
+      console.log("Start to insert");
+      count++;
+      const [topic, created] = await Topic.upsert({
+        code: topicCode,
+        description: topicDescription,
+        name: topicName,
+      });
+      const [capstoneTeam, capstoneTeamcreated] = await CapstoneTeam.upsert({
+        status: 1,
+        code: capstoneteamCode,
+        semeter_id: semester.id,
+        topic_id: topic.id,
+      });
+      for (j = 0; j < memberCodes.length; j++) {
+        const user = await User.findOne({
+          where: {
+            code: memberCodes[j].trim(),
+          },
+        });
+        console.log(user);
+        let role = await UserRole.findOne({
+          where: {
+            councilTeamId: null,
+            capstoneTeamId: capstoneTeam.id,
+            roleId: j === 0 ? 3 : 4,
+            userId: user.id,
+          },
+        });
+        if (!role) {
+          role = await UserRole.create({
+            capstoneTeamId: capstoneTeam.id,
+            roleId: j === 0 ? 3 : 4,
+            userId: user.id,
+          });
+        }
+      }
+
+      // insert mentorCodes
+      for (j = 0; j < mentorCodes.length; j++) {
+        const user = await User.findOne({
+          where: {
+            code: mentorCodes[j].trim(),
+          },
+        });
+        console.log(user);
+        let role = await UserRole.findOne({
+          where: {
+            councilTeamId: null,
+            capstoneTeamId: capstoneTeam.id,
+            roleId: 5,
+            userId: user.id,
+          },
+        });
+        if (!role) {
+          role = await UserRole.create({
+            capstoneTeamId: capstoneTeam.id,
+            roleId: 5,
+            userId: user.id,
+          });
+        }
+      }
+    }
+  }
+  return { count: count };
+};
+const getDetailCapstoneCouncil = async (code) => {
   let result = null;
 
   // get location
@@ -646,4 +745,5 @@ module.exports = {
   getAllCapstoneTeams,
   getDetailCapstoneTeam,
   getDetailCapstoneCouncil,
+  insertCapstoneTeams,
 };
