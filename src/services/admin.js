@@ -13,6 +13,8 @@ const Setting = require("../../models/Setting");
 const CouncilLocation = require("../../models/CouncilLocation");
 const sequelize = require("../../db");
 const { QueryTypes } = require("sequelize");
+const Semeter = require("../../models/Semeter");
+const Topic = require("../../models/Topic");
 
 // insert councils team
 const insertCouncils = async (councils) => {
@@ -574,76 +576,175 @@ const getDetailCapstoneTeam = async (capstoneTeam) => {
   };
   return detailCapstoneTeam;
 };
+const insertCapstoneTeams = async (teams) => {
+  let count = 0;
+  for (i = 0; i < teams?.length; i++) {
+    const item = teams[i];
+    const capstoneteamCode = item["capstone_team_code"];
+    const semesterCode = item["semeter_code"];
+    const topicCode = item["topic_code"];
+    const topicDescription = item["topic_description"];
+    const leaderCode = item["leader_code"];
+    const mentorCodes = item["mentor_code"].split(",");
+    let memberCodes = item["member_code"].split(",");
+    memberCodes.unshift(leaderCode);
+    const topicName = item["topic_name"];
+    let isValid = true;
 
-const getDetailCapstoneCouncil = async code => {
-  let result = null;
+    const getDetailCapstoneCouncil = async (code) => {
+      let result = null;
 
-  // get location
-  const locationQuery = `
+      // get location
+      const locationQuery = `
   SELECT r.id,r.name,r.code 
   FROM capstone_councils cc join council_locations cl on cc.id = cl.council_id
                             join rooms r on cl.room_id = r.id
   WHERE cc.code = '${code}' group by r.id,r.name,r.code;`;
-  const location = await sequelize.query(locationQuery, {
-    type: QueryTypes.SELECT,
-  });
+      const location = await sequelize.query(locationQuery, {
+        type: QueryTypes.SELECT,
+      });
 
-  if (location.length > 0) {
-    result = {};
-    result.room_id = location[0].id;
-    result.room_code = location[0].code;
-    result.room_name = location[0].name;
-    result.topics = [];
-  }
+      if (location.length > 0) {
+        result = {};
+        result.room_id = location[0].id;
+        result.room_code = location[0].code;
+        result.room_name = location[0].name;
+        result.topics = [];
+      }
 
-  // get topic
-  const topicQuery = `
+      // get topic
+      const topicQuery = `
   SELECT t.code as topic_code,t.name as topic_name,ct.code as capstone_team_code,r.date_grade as date_grade,r.type as type 
   FROM topics t join capstone_teams ct on t.id = ct.topic_id
                 join reports r on ct.id = r.capstone_team_id
                 join council_locations cl on r.id = cl.report_id
                 join capstone_councils cc on cl.council_id = cc.id
   WHERE cc.code = '${code}' group by t.code,t.name,ct.code,r.date_grade,r.type;`;
-  const topics = await sequelize.query(topicQuery, {
-    type: QueryTypes.SELECT,
-  });
+      const topics = await sequelize.query(topicQuery, {
+        type: QueryTypes.SELECT,
+      });
 
-  if (topics.length > 0) {
-    let topicResult = [];
-    for (let [index, topic] of topics.entries()) {
-      const mentorsQuery = `
+      if (topics.length > 0) {
+        let topicResult = [];
+        for (let [index, topic] of topics.entries()) {
+          const mentorsQuery = `
       SELECT u.name 
       FROM capstone_teams ct join user_roles ur on ct.id = ur.capstone_team_id
                               join users u on ur.user_id = u.id
       WHERE ct.code='${topic.capstone_team_code}' and ur.role_id = 5;`;
-      const mentors = await sequelize.query(mentorsQuery, {
-        type: QueryTypes.SELECT,
-      });
-      let mentorResult = "";
-      for (let mentor of mentors) {
-        mentorResult += `${mentor.name}, `;
+          const mentors = await sequelize.query(mentorsQuery, {
+            type: QueryTypes.SELECT,
+          });
+          let mentorResult = "";
+          for (let mentor of mentors) {
+            mentorResult += `${mentor.name}, `;
+          }
+          mentorResult = mentorResult.substring(0, mentorResult.length - 2);
+          topicResult.push({
+            no: index + 1,
+            topic_code: topic.topic_code,
+            topic_name: topic.topic_name,
+            capstone_team_code: topic.capstone_team_code,
+            date_grade: moment(topic.date_grade).format("DD/MM/YYYY HH:mm"),
+            type: topic.type,
+            mentors: mentorResult,
+          });
+        }
+        result.topics = topicResult;
       }
-      mentorResult = mentorResult.substring(0, mentorResult.length - 2);
-      topicResult.push({
-        no: index + 1,
-        topic_code: topic.topic_code,
-        topic_name: topic.topic_name,
-        capstone_team_code: topic.capstone_team_code,
-        date_grade: moment(topic.date_grade).format("DD/MM/YYYY HH:mm"),
-        type: topic.type,
-        mentors: mentorResult,
-      });
+
+      return result;
+    };
+
+    const semester = await Semeter.findOne({
+      where: { code: semesterCode },
+    });
+    if (!capstoneteamCode || !topicCode || !topicName || !semester) {
+      isValid = false;
     }
-    result.topics = topicResult;
+
+    const tests = memberCodes.concat(mentorCodes);
+    for (j = 0; j < tests.length; j++) {
+      const user = await User.findOne({
+        where: {
+          code: tests[j].trim(),
+        },
+      });
+      if (!user) {
+        isValid = false;
+      }
+    }
+    if (isValid) {
+      console.log("Start to insert");
+      count++;
+      const [topic, created] = await Topic.upsert({
+        code: topicCode,
+        description: topicDescription,
+        name: topicName,
+      });
+      const [capstoneTeam, capstoneTeamcreated] = await CapstoneTeam.upsert({
+        status: 1,
+        code: capstoneteamCode,
+        semeter_id: semester.id,
+        topic_id: topic.id,
+      });
+      for (j = 0; j < memberCodes.length; j++) {
+        const user = await User.findOne({
+          where: {
+            code: memberCodes[j].trim(),
+          },
+        });
+        console.log(user);
+        let role = await UserRole.findOne({
+          where: {
+            councilTeamId: null,
+            capstoneTeamId: capstoneTeam.id,
+            roleId: j === 0 ? 3 : 4,
+            userId: user.id,
+          },
+        });
+        if (!role) {
+          role = await UserRole.create({
+            capstoneTeamId: capstoneTeam.id,
+            roleId: j === 0 ? 3 : 4,
+            userId: user.id,
+          });
+        }
+      }
+
+      // insert mentorCodes
+      for (j = 0; j < mentorCodes.length; j++) {
+        const user = await User.findOne({
+          where: {
+            code: mentorCodes[j].trim(),
+          },
+        });
+        console.log(user);
+        let role = await UserRole.findOne({
+          where: {
+            councilTeamId: null,
+            capstoneTeamId: capstoneTeam.id,
+            roleId: 5,
+            userId: user.id,
+          },
+        });
+        if (!role) {
+          role = await UserRole.create({
+            capstoneTeamId: capstoneTeam.id,
+            roleId: 5,
+            userId: user.id,
+          });
+        }
+      }
+    }
   }
-
-  return result;
+  return { count: count };
 };
-
 module.exports = {
   insertCouncils,
   getAllCouncilTeams,
   getAllCapstoneTeams,
   getDetailCapstoneTeam,
   getDetailCapstoneCouncil,
+  insertCapstoneTeams,
 };
