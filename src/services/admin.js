@@ -590,72 +590,6 @@ const insertCapstoneTeams = async (teams) => {
     memberCodes.unshift(leaderCode);
     const topicName = item["topic_name"];
     let isValid = true;
-
-    const getDetailCapstoneCouncil = async (code) => {
-      let result = null;
-
-      // get location
-      const locationQuery = `
-  SELECT r.id,r.name,r.code 
-  FROM capstone_councils cc join council_locations cl on cc.id = cl.council_id
-                            join rooms r on cl.room_id = r.id
-  WHERE cc.code = '${code}' group by r.id,r.name,r.code;`;
-      const location = await sequelize.query(locationQuery, {
-        type: QueryTypes.SELECT,
-      });
-
-      if (location.length > 0) {
-        result = {};
-        result.room_id = location[0].id;
-        result.room_code = location[0].code;
-        result.room_name = location[0].name;
-        result.topics = [];
-      }
-
-      // get topic
-      const topicQuery = `
-  SELECT t.code as topic_code,t.name as topic_name,ct.code as capstone_team_code,r.date_grade as date_grade,r.type as type 
-  FROM topics t join capstone_teams ct on t.id = ct.topic_id
-                join reports r on ct.id = r.capstone_team_id
-                join council_locations cl on r.id = cl.report_id
-                join capstone_councils cc on cl.council_id = cc.id
-  WHERE cc.code = '${code}' group by t.code,t.name,ct.code,r.date_grade,r.type;`;
-      const topics = await sequelize.query(topicQuery, {
-        type: QueryTypes.SELECT,
-      });
-
-      if (topics.length > 0) {
-        let topicResult = [];
-        for (let [index, topic] of topics.entries()) {
-          const mentorsQuery = `
-      SELECT u.name 
-      FROM capstone_teams ct join user_roles ur on ct.id = ur.capstone_team_id
-                              join users u on ur.user_id = u.id
-      WHERE ct.code='${topic.capstone_team_code}' and ur.role_id = 5;`;
-          const mentors = await sequelize.query(mentorsQuery, {
-            type: QueryTypes.SELECT,
-          });
-          let mentorResult = "";
-          for (let mentor of mentors) {
-            mentorResult += `${mentor.name}, `;
-          }
-          mentorResult = mentorResult.substring(0, mentorResult.length - 2);
-          topicResult.push({
-            no: index + 1,
-            topic_code: topic.topic_code,
-            topic_name: topic.topic_name,
-            capstone_team_code: topic.capstone_team_code,
-            date_grade: moment(topic.date_grade).format("DD/MM/YYYY HH:mm"),
-            type: topic.type,
-            mentors: mentorResult,
-          });
-        }
-        result.topics = topicResult;
-      }
-
-      return result;
-    };
-
     const semester = await Semeter.findOne({
       where: { code: semesterCode },
     });
@@ -738,8 +672,72 @@ const insertCapstoneTeams = async (teams) => {
       }
     }
   }
-  return { count: count };
 };
+const getDetailCapstoneCouncil = async (code) => {
+  let result = null;
+
+  // get location
+  const locationQuery = `
+  SELECT r.id,r.name,r.code 
+  FROM capstone_councils cc join council_locations cl on cc.id = cl.council_id
+                            join rooms r on cl.room_id = r.id
+  WHERE cc.code = '${code}' group by r.id,r.name,r.code;`;
+  const location = await sequelize.query(locationQuery, {
+    type: QueryTypes.SELECT,
+  });
+
+  if (location.length > 0) {
+    result = {};
+    result.room_id = location[0].id;
+    result.room_code = location[0].code;
+    result.room_name = location[0].name;
+    result.topics = [];
+  }
+
+  // get topic
+  const topicQuery = `
+  SELECT t.code as topic_code,t.name as topic_name,ct.code as capstone_team_code,r.date_grade as date_grade,r.type as type 
+  FROM topics t join capstone_teams ct on t.id = ct.topic_id
+                join reports r on ct.id = r.capstone_team_id
+                join council_locations cl on r.id = cl.report_id
+                join capstone_councils cc on cl.council_id = cc.id
+  WHERE cc.code = '${code}' group by t.code,t.name,ct.code,r.date_grade,r.type;`;
+  const topics = await sequelize.query(topicQuery, {
+    type: QueryTypes.SELECT,
+  });
+
+  if (topics.length > 0) {
+    let topicResult = [];
+    for (let [index, topic] of topics.entries()) {
+      const mentorsQuery = `
+      SELECT u.name 
+      FROM capstone_teams ct join user_roles ur on ct.id = ur.capstone_team_id
+                              join users u on ur.user_id = u.id
+      WHERE ct.code='${topic.capstone_team_code}' and ur.role_id = 5;`;
+      const mentors = await sequelize.query(mentorsQuery, {
+        type: QueryTypes.SELECT,
+      });
+      let mentorResult = "";
+      for (let mentor of mentors) {
+        mentorResult += `${mentor.name}, `;
+      }
+      mentorResult = mentorResult.substring(0, mentorResult.length - 2);
+      topicResult.push({
+        no: index + 1,
+        topic_code: topic.topic_code,
+        topic_name: topic.topic_name,
+        capstone_team_code: topic.capstone_team_code,
+        date_grade: moment(topic.date_grade).format("DD/MM/YYYY HH:mm"),
+        type: topic.type,
+        mentors: mentorResult,
+      });
+    }
+    result.topics = topicResult;
+  }
+
+  return result;
+};
+
 module.exports = {
   insertCouncils,
   getAllCouncilTeams,
