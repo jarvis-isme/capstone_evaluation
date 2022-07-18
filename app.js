@@ -4,7 +4,6 @@ const cors = require("cors");
 const helmet = require("helmet");
 const sequelize = require("./db");
 const winston = require("winston");
-var cron = require("node-cron");
 var nodemailer = require("nodemailer");
 
 require("dotenv").config();
@@ -69,17 +68,7 @@ app.use("/grade", gradeRouter);
 
 const { errorHandle } = require("./src/middlewares/errorHandler");
 app.use(errorHandle);
-const transporter = nodemailer.createTransport({
-  host: "smtp.mailtrap.io",
-  port: 2525,
-  auth: {
-    user: `${process.env.USER_MAIL}`,
-    pass: `${process.env.PASS_MAIL}`,
-  },
-});
-// cron.schedule("0,0,9 * * *", async () => {
 
-// });
 app.listen(port, () => {
   console.log(`Sever is listening on port ${port}`);
 });
