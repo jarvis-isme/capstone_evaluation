@@ -36,6 +36,7 @@ const {
   insertCapstoneTeams,
   getGrades,
   updateGradeDetail,
+  deleteGradeDetail,
 } = require("../services/admin");
 
 adminRouter.post("/insert-capstone-team", async (req, res, next) => {
@@ -173,6 +174,20 @@ adminRouter.post("/grades", async (req, res, next) => {
     const response = await updateGradeDetail(marks);
 
     res.json(success((message = "Update Succesfully")));
+  } catch (e) {
+    console.log(e);
+    next((e.code = 500));
+  }
+});
+
+adminRouter.delete("/grades", async (req, res, next) => {
+  const { id } = req.body;
+  if (!id) {
+    res.status(400).json(validation());
+  }
+  try {
+    const response = await deleteGradeDetail(id);
+    res.json(success((message = "Delete Succesfully")));
   } catch (e) {
     console.log(e);
     next((e.code = 500));
