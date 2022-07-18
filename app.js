@@ -50,6 +50,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+
 //setting router
 const campusRouter = require("./src/routes/campus");
 app.use("/campus", campusRouter);
