@@ -738,7 +738,15 @@ const getDetailCapstoneCouncil = async (code) => {
 
   return result;
 };
-
+const getGrades = async () => {
+  const grades = await Setting.findAll({
+    where: {
+      code: "M001",
+    },
+    attributes: { exclude: ["createdAt", "updatedAt"] },
+  });
+  return grades ? grades : [];
+};
 module.exports = {
   insertCouncils,
   getAllCouncilTeams,
@@ -746,4 +754,5 @@ module.exports = {
   getDetailCapstoneTeam,
   getDetailCapstoneCouncil,
   insertCapstoneTeams,
+  getGrades,
 };
