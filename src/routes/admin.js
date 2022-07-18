@@ -35,6 +35,7 @@ const {
   getDetailCapstoneCouncil,
   insertCapstoneTeams,
   getGrades,
+  updateGradeDetail,
 } = require("../services/admin");
 
 adminRouter.post("/insert-capstone-team", async (req, res, next) => {
@@ -150,13 +151,28 @@ adminRouter.get(
   }
 );
 
-adminRouter.get("/grades", async (req, res, next) => {
+adminRouter.get("/grades", verifyToken, async (req, res, next) => {
   try {
     const response = await getGrades();
 
     res.json(
       success((message = "Get Grades Succesfully"), (results = response))
     );
+  } catch (e) {
+    console.log(e);
+    next((e.code = 500));
+  }
+});
+
+adminRouter.post("/grades", async (req, res, next) => {
+  const { marks } = req.body;
+  if (!marks) {
+    res.status(400).json(validation());
+  }
+  try {
+    const response = await updateGradeDetail(marks);
+
+    res.json(success((message = "Update Succesfully")));
   } catch (e) {
     console.log(e);
     next((e.code = 500));

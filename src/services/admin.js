@@ -5,7 +5,7 @@ const User = require("../../models/User");
 const UserRole = require("../../models/UserRole");
 const moment = require("moment");
 const Report = require("../../models/Report");
-const { Op } = require("sequelize");
+const { Op, where } = require("sequelize");
 const ROLES = require("../../constant/role");
 const Grade = require("../../models/Grade");
 const File = require("../../models/File");
@@ -747,6 +747,39 @@ const getGrades = async () => {
   });
   return grades ? grades : [];
 };
+
+const updateGradeDetail = async (marks) => {
+  for (i = 0; i < marks?.length; i++) {
+    const mark = marks[i];
+    const id = mark?.id;
+
+    let grade = await Setting.findOne({
+      where: {
+        id: id ? id : 0,
+      },
+    });
+    if (!grade) {
+      grade = await Setting.create({
+        code: "M001",
+        name: mark["name"],
+        value: mark["value"],
+      });
+    } else {
+      await Setting.update(
+        {
+          code: "M001",
+          name: mark["name"],
+          value: mark["value"],
+        },
+        {
+          where: {
+            id: grade.id,
+          },
+        }
+      );
+    }
+  }
+};
 module.exports = {
   insertCouncils,
   getAllCouncilTeams,
@@ -755,4 +788,5 @@ module.exports = {
   getDetailCapstoneCouncil,
   insertCapstoneTeams,
   getGrades,
+  updateGradeDetail,
 };
