@@ -8,7 +8,7 @@ const sequelize = new Sequelize(
   {
     host: `${process.env.DATABASE_HOST}`,
     port: `${process.env.DATABASE_PORT}`,
-    dialect: `${process.env.DATABASE_DIALECT}`,
+    dialect: `postgres`,
     quoteIdentifiers: false, // remove " from table name
   }
 );
