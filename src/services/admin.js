@@ -780,6 +780,14 @@ const updateGradeDetail = async (marks) => {
     }
   }
 };
+
+const deleteGradeDetail = async (id) => {
+  await Setting.destroy({
+    where: {
+      id: id,
+    },
+  });
+};
 module.exports = {
   insertCouncils,
   getAllCouncilTeams,
@@ -789,4 +797,5 @@ module.exports = {
   insertCapstoneTeams,
   getGrades,
   updateGradeDetail,
+  deleteGradeDetail,
 };
