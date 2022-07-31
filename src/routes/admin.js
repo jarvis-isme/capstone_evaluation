@@ -39,24 +39,28 @@ const {
   deleteGradeDetail,
 } = require("../services/admin");
 
-adminRouter.post("/insert-capstone-team", async (req, res, next) => {
-  const { teams } = req.body;
-  console.log(teams);
-  if (!teams) {
-    res.status(400).json(validation());
+adminRouter.post(
+  "/insert-capstone-team",
+  verifyToken,
+  async (req, res, next) => {
+    const { teams } = req.body;
+    console.log(teams);
+    if (!teams) {
+      res.status(400).json(validation());
+    }
+    try {
+      const response = await insertCapstoneTeams(teams);
+      return res.json(
+        success((message = `Imported  rows`), (results = response))
+      );
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
   }
-  try {
-    const response = await insertCapstoneTeams(teams);
-    return res.json(
-      success((message = `Imported  rows`), (results = response))
-    );
-  } catch (e) {
-    console.log(e);
-    next(e);
-  }
-});
+);
 
-adminRouter.get("/get-captone-team", async (req, res) => {
+adminRouter.get("/get-captone-team", verifyToken, async (req, res) => {
   try {
     const data = await getAllCapstoneTeams();
     res.json(
@@ -69,7 +73,7 @@ adminRouter.get("/get-captone-team", async (req, res) => {
 });
 
 // get capstone council
-adminRouter.get("/get-captone-council", async (req, res) => {
+adminRouter.get("/get-captone-council", verifyToken, async (req, res) => {
   try {
     const data = await getAllCouncilTeams();
     res.json(
@@ -103,7 +107,7 @@ adminRouter.post(
   }
 );
 
-adminRouter.get("/capstone-team/:code", async (req, res, next) => {
+adminRouter.get("/capstone-team/:code", verifyToken, async (req, res, next) => {
   const code = req.params.code;
   const capstoneTeam = await CapstoneTeam.findOne({
     where: {
@@ -165,7 +169,7 @@ adminRouter.get("/grades", verifyToken, async (req, res, next) => {
   }
 });
 
-adminRouter.post("/grades", async (req, res, next) => {
+adminRouter.post("/grades", verifyToken, async (req, res, next) => {
   const { marks } = req.body;
   if (!marks) {
     res.status(400).json(validation());
@@ -180,7 +184,7 @@ adminRouter.post("/grades", async (req, res, next) => {
   }
 });
 
-adminRouter.delete("/grades", async (req, res, next) => {
+adminRouter.delete("/grades", verifyToken, async (req, res, next) => {
   const { id } = req.body;
   if (!id) {
     res.status(400).json(validation());

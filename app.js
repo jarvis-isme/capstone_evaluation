@@ -70,6 +70,9 @@ app.use("/grade", gradeRouter);
 const { errorHandle } = require("./src/middlewares/errorHandler");
 app.use(errorHandle);
 
+const { updateCapstoneTeam } = require("./crontab");
+updateCapstoneTeam.start();
+
 app.listen(port, () => {
   console.log(`Sever is listening on port ${port}`);
 });

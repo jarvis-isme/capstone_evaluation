@@ -335,6 +335,7 @@ const getAllCapstoneTeams = async (req, res) => {
 
   const result = await sequelize.query(
     `SELECT 
+      s.id,
       ct.code as capstone_team_code,
       s.name as semeter_name,
       t.name as topic_name,
@@ -345,7 +346,9 @@ const getAllCapstoneTeams = async (req, res) => {
       inner join user_roles ur on u.id = ur.user_id
       inner join capstone_teams ct on ct.id = ur.capstone_team_id
       inner join semeters s on ct.semeter_id = s.id
-      inner join topics t on ct.topic_id = t.id;`,
+      inner join topics t on ct.topic_id = t.id
+      order by s.id desc 
+      ;`,
     { type: QueryTypes.SELECT }
   );
   for (let i = 0; i < result.length; i++) {
@@ -528,7 +531,7 @@ const getDetailCapstoneTeam = async (capstoneTeam) => {
             name: report.student_name,
             id: report.student_id,
             marks: marks,
-            totalGrade: report.totalGrade,
+            totalGrade: report.total_grade,
           },
         ],
         files: [
@@ -552,7 +555,7 @@ const getDetailCapstoneTeam = async (capstoneTeam) => {
           name: report.student_name,
           id: report.student_id,
           marks: marks,
-          totalGrade: report.totalGrade,
+          totalGrade: report.total_grade,
         });
       }
       const isExistFile = reports[key].files.find((element) => {

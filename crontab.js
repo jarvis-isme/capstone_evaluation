@@ -1,15 +1,32 @@
-const CronJob = require("cron").CronJob;
-var nodemailer = require("nodemailer");
-var sendMailJob = new CronJob(
-  "* * * * * *",
-  () => {
-    console.log("You will see this message every second");
-  },
-  null,
-  true,
-  "America/Los_Angeles"
-);
-// Use this if the 4th param is default value(false)
-// job.start()
+const cron = require("node-cron");
+const Semeter = require("./models/Semeter");
+const { Op } = require("sequelize");
+const CapstoneTeam = require("./models/CapstoneTeam");
 
-module.exports = { sendMailJob };
+const updateCapstoneTeam = cron.schedule("* * * * *", async () => {
+  console.log("start crontab update status capstone team");
+  const now = Date.now();
+  console.log(now);
+  const semester = await Semeter.findAll({
+    where: {
+      end_at: {
+        [Op.lte]: now,
+      },
+    },
+  });
+  for (i = 0; i < semester?.length; i++) {
+    await CapstoneTeam.update(
+      {
+        status: "0",
+      },
+      {
+        where: {
+          semeter_id: semester[i].id,
+        },
+      }
+    );
+  }
+  console.log("end crontab update status capstont team");
+});
+
+module.exports = { updateCapstoneTeam };
